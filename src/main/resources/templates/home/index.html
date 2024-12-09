@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{shared/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+<body>
+    <section layout:fragment="content" class="intro">
+        <h1 th:text="${message}" class="text-3xl font-bold"></h1>
+        <h2 th:text="${name}" class="text-2xl font-bold"></h2>
+        <h2 th:text="${age}" class="text-xl font-semibold"></h2>
+        <ul>
+            <li th:each="number : ${numbers}">
+                <span th:text="${number}"></span>
+            </li>
+        </ul>
+    </section>
+
+</body>
+
+</html>

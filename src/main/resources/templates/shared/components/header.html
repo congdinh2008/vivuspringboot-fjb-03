@@ -1,0 +1,27 @@
+<!-- Header -->
+<header th:fragment="header" class="flex justify-between items-center px-4 bg-blue-500 text-white">
+    <a th:href="@{/}" class="brand text-2xl font-bold">ViVu Store</a>
+    <nav>
+        <ul class="nav-menu flex items-center">
+            <li class="nav-item">
+                <a th:href="@{/}" class="nav-link p-4 hover:bg-blue-700">Home</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/manager/categories}" class="nav-link p-4 hover:bg-blue-700">Category</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/manager/products}" class="nav-link p-4 hover:bg-blue-700">Product</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/about}" class="nav-link p-4 hover:bg-blue-700">About</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/contact/10}" class="nav-link p-4 hover:bg-blue-700">Contact</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="profile-menu flex items-center">
+        <a th:href="@{/auth/login}" class="nav-link p-4 hover:bg-blue-700">Login</a>
+        <a th:href="@{/auth/register}" class="nav-link p-4 hover:bg-blue-700">Register</a>
+    </div>
+</header>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex flex-col min-h-screen">
+     <!-- Header -->
+     <header th:replace="shared/components/header :: header"></header>
+    
+     <!-- Main Content -->
+     <main class="flex-grow flex">
+         <div layout:fragment="content"></div>
+     </main>
+     
+     <!-- Footer -->
+     <footer th:replace="shared/components/footer :: footer"></footer>
+</body>
+
+</html>
