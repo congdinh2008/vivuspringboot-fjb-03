@@ -1,6 +1,10 @@
 package com.congdinh.vivuspringboot.entities;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
+
+import org.hibernate.annotations.TimeZoneColumn;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,4 +22,19 @@ public class Category {
 
     @Column(columnDefinition = "NVARCHAR(500)")
     private String description;
+
+    @TimeZoneColumn
+    @Column(nullable = false, columnDefinition = "DATETIMEOFFSET")
+    private ZonedDateTime insertedAt;
+
+    @TimeZoneColumn
+    @Column(columnDefinition = "DATETIMEOFFSET")
+    private ZonedDateTime updatedAt;
+
+    @TimeZoneColumn
+    @Column(columnDefinition = "DATETIMEOFFSET")
+    private ZonedDateTime deletedAt;
+
+    @Column(nullable = false)
+    private boolean active;
 }
