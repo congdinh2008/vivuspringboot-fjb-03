@@ -38,7 +38,7 @@
                             <td th:text="${category.description}"></td>
                             <td>
                                 <div class="flex space-x-3 justify-center">
-                                    <a th:href="@{/manager/categories/{id}(id=${category.id})}">
+                                    <a th:href="@{/manager/categories/edit/{id}(id=${category.id})}">
                                         <i class="fas fa-edit text-blue-500"></i>
                                     </a>
                                     <form th:action="@{/manager/categories/delete/{id}(id=${category.id})}"
