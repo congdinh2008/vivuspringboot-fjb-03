@@ -81,7 +81,6 @@ public class CategoryService implements ICategoryService {
 
         // Save to database
         var newCategory = categoryRepository.save(category);
-        // Return true if success, otherwise false
 
         // Convert to DTO
         var categoryDTO = new CategoryDTO();

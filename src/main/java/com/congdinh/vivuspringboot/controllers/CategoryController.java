@@ -4,12 +4,19 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.congdinh.vivuspringboot.dtos.category.CategoryCreateUpdateDTO;
+import com.congdinh.vivuspringboot.dtos.category.CategoryDTO;
 import com.congdinh.vivuspringboot.services.ICategoryService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/manager/categories")
@@ -27,8 +34,48 @@ public class CategoryController {
         return "manager/category/index";
     }
 
+    @GetMapping("/create")
+    public String create(Model model) {
+        // Create new categoryCreateUpdateDTO
+        var categoryCreateUpdateDTO = new CategoryCreateUpdateDTO();
+
+        // Passing to view to validate data
+        model.addAttribute("category", categoryCreateUpdateDTO);
+        return "manager/category/create";
+    }
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute("category") @Valid CategoryCreateUpdateDTO categoryCreateUpdateDTO,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+        // Validate data from form
+        if (bindingResult.hasErrors()) {
+            return "manager/category/create";
+        }
+
+        // Create category
+        CategoryDTO result = null;
+        try {
+            result = categoryService.create(categoryCreateUpdateDTO);
+        } catch (Exception e) {
+            // Passing error message to view creating
+            model.addAttribute("error", e.getMessage());
+            return "manager/category/create";
+        }
+
+        if (result != null) {
+            // Redirect to index of categories with success message
+            redirectAttributes.addFlashAttribute("success", "Create category successfully");
+            return "redirect:/manager/categories";
+        } else {
+            // Passing error message to view creating
+            model.addAttribute("error", "Create category failed");
+            return "redirect:/manager/categories/create";
+        }
+    }
+
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable UUID id,
+            RedirectAttributes redirectAttributes) {
         boolean result = false;
         try {
             result = categoryService.delete(id);
