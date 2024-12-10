@@ -77,7 +77,7 @@ public class CategoryController {
     public String edit(
             @PathVariable UUID id,
             Model model) {
-        // Create new categoryCreateUpdateDTO
+        // Get category from db
         var categoryCreateUpdateDTO = categoryService.findById(id);
 
         // Passing to view to validate data
@@ -95,7 +95,7 @@ public class CategoryController {
             return "manager/category/create";
         }
 
-        // Create category
+        // Update category
         CategoryDTO result = null;
         try {
             result = categoryService.update(id, categoryCreateUpdateDTO);
@@ -110,7 +110,7 @@ public class CategoryController {
             redirectAttributes.addFlashAttribute("success", "Update category successfully");
             return "redirect:/manager/categories";
         } else {
-            // Passing error message to view creating
+            // Passing error message to view update
             model.addAttribute("error", "Update category failed");
             return "redirect:/manager/categories/edit";
         }
