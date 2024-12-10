@@ -17,6 +17,9 @@
 
     <!-- Main Content -->
     <main class="flex-grow flex">
+        <!-- Sidebar -->
+        <aside th:replace="shared/components/sidebar :: sidebar"></aside>
+
         <div layout:fragment="content"></div>
     </main>
 

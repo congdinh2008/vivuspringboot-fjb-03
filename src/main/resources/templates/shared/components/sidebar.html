@@ -1,0 +1,15 @@
+<!-- Sidebar -->
+<aside th:fragment="sidebar" 
+    class="min-w-[200px] border-r border-slate-300 h-screen shadow-lg">
+    <div class="text-2xl font-semibold p-2 border-b border-slate-300">Management</div>
+    <ul>
+        <li>
+            <a th:href="@{/manager/categories}" 
+                class="block p-2 py-3 hover:bg-blue-500 hover:text-white">Category</a>
+        </li>
+        <li>
+            <a th:href="@{/manager/products}" 
+                class="block p-2 py-3 hover:bg-blue-500 hover:text-white">Product</a>
+        </li>
+    </ul>
+</aside>

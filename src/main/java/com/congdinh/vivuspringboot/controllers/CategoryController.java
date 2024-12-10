@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.congdinh.vivuspringboot.services.ICategoryService;
 
@@ -26,13 +27,29 @@ public class CategoryController {
         return "manager/category/index";
     }
 
-    @GetMapping("/{id}")
-    public String findAll(
-            @PathVariable("id") UUID id,
-            Model model) {
-        var category = categoryService.findById(id);
-        model.addAttribute("category", category);
-        return "manager/category/details";
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
+        boolean result = false;
+        try {
+            result = categoryService.delete(id);
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Delete category failed");
+            return "redirect:/manager/categories";
+        }
+
+        if (result) {
+            // Redirect to index of categories
+            redirectAttributes.addFlashAttribute("success",
+                    "Delete category successfully");
+            return "redirect:/manager/categories";
+        } else {
+            // Passing error message to index
+            redirectAttributes.addFlashAttribute("error",
+                    "Delete category failed");
+            return "redirect:/manager/categories";
+        }
     }
 
     // Create
