@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{shared/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Details - ViVu Spring Boot</title>
+</head>
+
+<body>
+    <section layout:fragment="content" class="manager">
+        <h1>Category Management</h1>
+        <ul>
+            <li>
+                <span th:text="${category.id}"></span> -
+                <span th:text="${category.name}"></span> -
+                <span th:text="${category.description}"></span>
+            </li>
+        </ul>
+    </section>
+</body>
+
+</html>

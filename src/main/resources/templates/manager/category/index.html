@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{shared/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Management - ViVu Spring Boot</title>
+</head>
+
+<body>
+    <section layout:fragment="content" class="manager w-full">
+        <div class="card border border-slate-300">
+            <div class="card-header p-3">
+                <h1>Category Management</h1>
+            </div>
+            <div class="card-body p-3 border-y border-slate-300">
+                <table class="w-full">
+                    <thead>
+                        <tr class="*:border *:border-slate-300 *:p-2">
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="category : ${categories}" class="*:border *:border-slate-300 *:p-2">
+                            <td th:text="${category.name}"></td>
+                            <td th:text="${category.description}"></td>
+                            <td>
+                                <div class="flex">
+                                    <a th:href="@{/manager/categories/{id}(id=${category.id})}"
+                                        class="btn btn-primary">Edit</a>
+                                    <form th:action="@{/manager/categories/delete/{id}(id=${category.id})}"
+                                        method="post">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
