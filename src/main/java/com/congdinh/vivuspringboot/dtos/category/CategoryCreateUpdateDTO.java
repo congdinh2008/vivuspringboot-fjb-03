@@ -1,5 +1,7 @@
 package com.congdinh.vivuspringboot.dtos.category;
 
+import java.util.UUID;
+
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.validation.constraints.NotBlank;
@@ -14,6 +16,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryCreateUpdateDTO {
+
+    private UUID id;
 
     @NotBlank(message = "Name is required")
     @Length(min = 2, max = 255, message = "Name must be between 2 and 255 characters")
