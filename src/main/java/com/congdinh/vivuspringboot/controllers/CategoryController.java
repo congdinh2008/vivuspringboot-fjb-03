@@ -2,6 +2,7 @@ package com.congdinh.vivuspringboot.controllers;
 
 import java.util.UUID;
 
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,9 +32,21 @@ public class CategoryController {
     public String findAll(Model model) {
         var categories = categoryService.findAll();
         model.addAttribute("categories", categories);
+        model.addAttribute("isShow", true);
         return "manager/category/index";
     }
 
+    @GetMapping("/{categoryId}/products/{productId}")
+    public String findAll(
+        @PathVariable UUID categoryId,
+        @PathVariable UUID productId,
+        Model model) {
+        var categories = categoryService.findAll();
+        model.addAttribute("categories", categories);
+        return "manager/category/index";
+    }
+
+    // Show form
     @GetMapping("/create")
     public String create(Model model) {
         // Create new categoryCreateUpdateDTO
@@ -44,6 +57,7 @@ public class CategoryController {
         return "manager/category/create";
     }
 
+    // Collect data from view by Form
     @PostMapping("/create")
     public String create(@ModelAttribute("category") @Valid CategoryCreateUpdateDTO categoryCreateUpdateDTO,
             BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
@@ -114,7 +128,7 @@ public class CategoryController {
         } else {
             // Passing error message to view update
             model.addAttribute("error", "Update category failed");
-            return "redirect:/manager/categories/edit";
+            return "manager/category/edit";
         }
     }
 
