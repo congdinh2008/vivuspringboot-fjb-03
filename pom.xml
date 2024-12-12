@@ -31,13 +31,6 @@
 		<java.version>23</java.version>
 	</properties>
 	<dependencies>
-		<!-- Lombok -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.36</version>
-		</dependency>
-		
 		<!-- Spring Boot JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

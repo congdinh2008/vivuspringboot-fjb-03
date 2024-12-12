@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{shared/managerLayout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Category - ViVu Spring Boot</title>
+</head>
+
+<body>
+    <section layout:fragment="content" class="manager w-full p-4">
+        <div class="card border border-slate-300 rounded-md">
+            <div class="card-header p-3">
+                <h1 class="text-2xl font-semibold">Edit Category</h1>
+                <div class="messages">
+                    <p th:text="${error}" class="text-red-500"></p>
+                    <p th:text="${success}" class="text-green-500"></p>
+                </div>
+            </div>
+            <form th:action=" @{/manager/categories/edit/{id}(id=${category.id})}" method="post" th:object="${category}"
+                <div class="card-body p-3 border-y border-slate-300 flex space-x-3">
+                <div class="form-group mb-3 w-1/2">
+                    <label for="name" class="block mb-2">Name</label>
+                    <input type="text" name="name" id="name" placeholder="Enter category name"
+                        class="w-full border border-slate-300 p-2 rounded-md" th:value="*{name}">
+                    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500">abcd</span>
+                </div>
+                <div class="form-group mb-3 w-1/2">
+                    <label for="description" class="block mb-2">Description</label>
+                    <textarea name="description" id="description" class="w-full border border-slate-300 p-2 rounded-md"
+                        th:text="*{description}"></textarea>
+                    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+                        class="text-red-500"></span>
+                </div>
+        </div>
+        <div class="card-footer p-3 border-y border-slate-300 flex items-center justify-between">
+            <a th:href="@{/manager/categories}"
+                class="inline-block p-2 px-4 bg-blue-500 text-white hover:bg-green-700 rounded-full">
+                <i class="fas fa-rotate-left"></i> Back
+            </a>
+            <div class="add-button">
+                <button type="reset" class="p-2 px-4 bg-slate-200 hover:bg-slate-500 rounded-full">
+                    <i class="fas fa-eraser"></i> Reset
+                </button>
+
+                <button type="submit" class="p-2 px-4 bg-green-500 text-white hover:bg-green-700 rounded-full">
+                    <i class="fas fa-save"></i> Save
+                </button>
+            </div>
+        </div>
+        </form>
+        </div>
+    </section>
+</body>
+
+</html>

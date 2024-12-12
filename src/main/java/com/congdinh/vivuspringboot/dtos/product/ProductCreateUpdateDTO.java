@@ -20,11 +20,14 @@ public class ProductCreateUpdateDTO {
 
     @NotNull(message = "Active is required")
     private boolean active;
-
+    
+    @NotNull(message = "Price is required")
     private double price;
-
+    
+    @NotNull(message = "Stock is required")
     private int stock;
 
+    @NotNull(message = "Category is required")
     private UUID categoryId;
 
     public UUID getId() {

@@ -2,6 +2,8 @@ package com.congdinh.vivuspringboot.controllers;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.congdinh.vivuspringboot.dtos.category.CategoryCreateUpdateDTO;
@@ -28,10 +31,18 @@ public class CategoryController {
     }
 
     @GetMapping
-    public String findAll(Model model) {
-        var categories = categoryService.findAll();
+    public String index(
+        @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+        @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+        @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+        Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        var categories = categoryService.searchAll(keyword, pageable);
         model.addAttribute("categories", categories);
         model.addAttribute("isShow", true);
+        model.addAttribute("currentKeyword", keyword);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("currentSize", size);
         return "manager/category/index";
     }
 

@@ -3,6 +3,8 @@ package com.congdinh.vivuspringboot.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Pageable;
+
 import com.congdinh.vivuspringboot.dtos.category.CategoryCreateUpdateDTO;
 import com.congdinh.vivuspringboot.dtos.category.CategoryDTO;
 
@@ -20,6 +22,12 @@ public interface ICategoryService {
      */
     CategoryDTO findById(UUID id);
 
+    /**
+     * Search Category by keyword
+     * @param keyword The keyword to search
+     * @return List<CategoryDTO> by keyword
+     */
+    List<CategoryDTO> searchAll(String keyword, Pageable pageable);
     
     /**
      * Create Category

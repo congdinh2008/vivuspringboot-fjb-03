@@ -4,6 +4,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +13,8 @@ import com.congdinh.vivuspringboot.dtos.category.CategoryCreateUpdateDTO;
 import com.congdinh.vivuspringboot.dtos.category.CategoryDTO;
 import com.congdinh.vivuspringboot.entities.Category;
 import com.congdinh.vivuspringboot.repositories.ICategoryRepository;
+
+import jakarta.persistence.criteria.Predicate;
 
 @Service
 @Transactional
@@ -56,6 +60,43 @@ public class CategoryService implements ICategoryService {
 
         // Return dto
         return categoryDTO;
+    }
+
+    @Override
+    public List<CategoryDTO> searchAll(String keyword, Pageable pageable) {
+        Specification<Category> spec = (root, query, criteriaBuilder) -> {
+            if(keyword == null || keyword.isBlank()) {
+                return null;
+            }
+            // name LIKE %keyword%
+            Predicate namePredicate = criteriaBuilder.like(
+                criteriaBuilder.lower(root.get("name")), 
+                "%" + keyword.toLowerCase() + "%"
+            );
+
+            // description LIKE %keyword%
+            Predicate descriptionPredicate = criteriaBuilder.like(
+                criteriaBuilder.lower(root.get("description")), 
+                "%" + keyword.toLowerCase() + "%"
+            );
+
+            // name LIKE %keyword% OR description LIKE %keyword%
+            return criteriaBuilder.or(namePredicate, descriptionPredicate);
+        };
+
+        var categories = categoryRepository.findAll(spec, pageable);
+
+        // Convert to DTO
+        var categoryDTOs = categories.stream().map(item -> {
+            var categoryDTO = new CategoryDTO();
+            categoryDTO.setId(item.getId());
+            categoryDTO.setName(item.getName());
+            categoryDTO.setDescription(item.getDescription());
+            return categoryDTO;
+        }).toList();
+
+        // Return data
+        return categoryDTOs;
     }
 
     @Override
