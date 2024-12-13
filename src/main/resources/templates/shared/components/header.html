@@ -20,8 +20,20 @@
             </li>
         </ul>
     </nav>
-    <div class="profile-menu flex items-center">
-        <a th:href="@{/auth/login}" class="nav-link p-4 hover:bg-blue-700">Login</a>
-        <a th:href="@{/auth/register}" class="nav-link p-4 hover:bg-blue-700">Register</a>
+    <!-- Profile Menu -->
+    <div class="profile-menu flex justify-between items-center">
+        <!-- For Authenticated User -->
+        <div class="authenticated flex justify-between items-center" sec:authorize="isAuthenticated()">
+            <a th:href="@{/profile}" class="nav-link block p-4 hover:bg-blue-700">
+                <span th:text="${#authentication.name}"></span>
+            </a>
+            <a th:href="@{/logout}" class="nav-link block p-4 hover:bg-blue-700">Logout</a>
+        </div>
+
+        <!-- For Anonymous User -->
+        <div class="anonymous flex justify-between items-center" sec:authorize="isAnonymous()">
+            <a th:href="@{/auth/login}" class="nav-link block p-4 hover:bg-blue-700">Login</a>
+            <a th:href="@{/auth/register}" class="nav-link block p-4 hover:bg-blue-700">Register</a>
+        </div>
     </div>
 </header>

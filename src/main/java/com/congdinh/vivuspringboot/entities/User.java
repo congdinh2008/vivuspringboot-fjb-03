@@ -35,6 +35,14 @@ public class User extends MasterEntity {
     )
     private Set<Role> roles;
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     //#region Constructors
     public User(String firstName, String lastName, String username, String phoneNumber, String avatar,
             String password) {
