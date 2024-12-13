@@ -3,8 +3,12 @@ package com.congdinh.vivuspringboot.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.congdinh.vivuspringboot.dtos.product.ProductCreateUpdateDTO;
 import com.congdinh.vivuspringboot.dtos.product.ProductDTO;
+import com.congdinh.vivuspringboot.dtos.product.ProductSearchDTO;
 
 public interface IProductService {
 /**
@@ -19,6 +23,8 @@ public interface IProductService {
      * @return ProductDTO by id
      */
     ProductDTO findById(UUID id);
+
+    Page<ProductDTO> searchAll(ProductSearchDTO productSearchDTO, Pageable pageable);
 
     
     /**

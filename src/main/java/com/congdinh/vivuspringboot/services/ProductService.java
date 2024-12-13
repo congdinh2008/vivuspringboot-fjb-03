@@ -4,15 +4,21 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.congdinh.vivuspringboot.dtos.category.CategoryDTO;
 import com.congdinh.vivuspringboot.dtos.product.ProductCreateUpdateDTO;
 import com.congdinh.vivuspringboot.dtos.product.ProductDTO;
+import com.congdinh.vivuspringboot.dtos.product.ProductSearchDTO;
 import com.congdinh.vivuspringboot.entities.Product;
 import com.congdinh.vivuspringboot.repositories.ICategoryRepository;
 import com.congdinh.vivuspringboot.repositories.IProductRepository;
+
+import jakarta.persistence.criteria.Predicate;
 
 @Service
 @Transactional
@@ -101,7 +107,7 @@ public class ProductService implements IProductService {
         // Check if category exist with categoryId
         var existingCategory = categoryRepository.findById(productCreateUpdateDTO.getCategoryId()).orElse(null);
 
-        if(existingCategory == null){
+        if (existingCategory == null) {
             throw new IllegalArgumentException("Category not existed");
         }
 
@@ -131,7 +137,6 @@ public class ProductService implements IProductService {
             productDTO.setCategory(categoryDTO);
         }
 
-
         // Return dto
         return productDTO;
     }
@@ -160,7 +165,7 @@ public class ProductService implements IProductService {
         // Check if category exist with categoryId
         var existingCategory = categoryRepository.findById(productCreateUpdateDTO.getCategoryId()).orElse(null);
 
-        if(existingCategory == null){
+        if (existingCategory == null) {
             throw new IllegalArgumentException("Category not existed");
         }
 
@@ -222,5 +227,63 @@ public class ProductService implements IProductService {
         } else {
             return delete(id);
         }
+    }
+
+    @Override
+    public Page<ProductDTO> searchAll(ProductSearchDTO productSearchDTO, Pageable pageable) {
+        Specification<Product> spec = (root, query, criteriaBuilder) -> {
+            Predicate nameOrDescription = null;
+            if (!(productSearchDTO.getKeyword() == null || productSearchDTO.getKeyword().isBlank())) {
+                // name LIKE %keyword%
+                Predicate namePredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("name")),
+                        "%" + productSearchDTO.getKeyword().toLowerCase() + "%");
+
+                // description LIKE %keyword%
+                Predicate descriptionPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("description")),
+                        "%" + productSearchDTO.getKeyword().toLowerCase() + "%");
+
+                // name LIKE %keyword% OR description LIKE %keyword%
+                nameOrDescription = criteriaBuilder.or(namePredicate, descriptionPredicate);
+            }
+
+            // price between minPrice and maxPrice
+            Predicate betweenPricePredicate = criteriaBuilder.between(root.get("price"), productSearchDTO.getMinPrice(),
+                    productSearchDTO.getMaxPrice());
+
+            if(nameOrDescription == null) {
+                return betweenPricePredicate;
+            }
+
+            // name LIKE %keyword% OR description LIKE %keyword% AND active = active
+            return criteriaBuilder.and(nameOrDescription, betweenPricePredicate);
+        };
+
+        var products = productRepository.findAll(spec, pageable);
+
+        // Convert to DTO
+        var productDTOs = products.map(item -> {
+            var productDTO = new ProductDTO();
+            productDTO.setId(item.getId());
+            productDTO.setName(item.getName());
+            productDTO.setDescription(item.getDescription());
+            productDTO.setPrice(item.getPrice());
+            productDTO.setStock(item.getStock());
+
+            // Lay them thong tin category ma product do thuoc ve
+            if (item.getCategory() != null) {
+                var categoryDTO = new CategoryDTO();
+                categoryDTO.setId(item.getCategory().getId());
+                categoryDTO.setName(item.getCategory().getName());
+                categoryDTO.setDescription(item.getCategory().getDescription());
+                productDTO.setCategory(categoryDTO);
+            }
+
+            return productDTO;
+        });
+
+        // Return data
+        return productDTOs;
     }
 }

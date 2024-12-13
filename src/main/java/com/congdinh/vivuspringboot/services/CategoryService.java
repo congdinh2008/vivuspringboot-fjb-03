@@ -2,8 +2,10 @@ package com.congdinh.vivuspringboot.services;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -63,22 +65,20 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public List<CategoryDTO> searchAll(String keyword, Pageable pageable) {
+    public Page<CategoryDTO> searchAll(String keyword, Pageable pageable) {
         Specification<Category> spec = (root, query, criteriaBuilder) -> {
-            if(keyword == null || keyword.isBlank()) {
+            if (keyword == null || keyword.isBlank()) {
                 return null;
             }
             // name LIKE %keyword%
             Predicate namePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(root.get("name")), 
-                "%" + keyword.toLowerCase() + "%"
-            );
+                    criteriaBuilder.lower(root.get("name")),
+                    "%" + keyword.toLowerCase() + "%");
 
             // description LIKE %keyword%
             Predicate descriptionPredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(root.get("description")), 
-                "%" + keyword.toLowerCase() + "%"
-            );
+                    criteriaBuilder.lower(root.get("description")),
+                    "%" + keyword.toLowerCase() + "%");
 
             // name LIKE %keyword% OR description LIKE %keyword%
             return criteriaBuilder.or(namePredicate, descriptionPredicate);
@@ -87,13 +87,56 @@ public class CategoryService implements ICategoryService {
         var categories = categoryRepository.findAll(spec, pageable);
 
         // Convert to DTO
-        var categoryDTOs = categories.stream().map(item -> {
+        var categoryDTOs = categories.map(item -> {
             var categoryDTO = new CategoryDTO();
             categoryDTO.setId(item.getId());
             categoryDTO.setName(item.getName());
             categoryDTO.setDescription(item.getDescription());
             return categoryDTO;
-        }).toList();
+        });
+
+        // Return data
+        return categoryDTOs;
+    }
+
+    @Override
+    public Page<CategoryDTO> searchAll(String keyword, int active, Pageable pageable) {
+        Specification<Category> spec = (root, query, criteriaBuilder) -> {
+            if ((keyword == null || keyword.isBlank()) && (active < 0 || active > 2)) {
+                return null;
+            }
+            // name LIKE %keyword%
+            Predicate namePredicate = criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("name")),
+                    "%" + keyword.toLowerCase() + "%");
+
+            // description LIKE %keyword%
+            Predicate descriptionPredicate = criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("description")),
+                    "%" + keyword.toLowerCase() + "%");
+
+            if (active == 2) {
+                // name LIKE %keyword% OR description LIKE %keyword%
+                return criteriaBuilder.or(namePredicate, descriptionPredicate);
+            }
+
+            Predicate nameOrDescription = criteriaBuilder.or(namePredicate, descriptionPredicate);
+            Predicate activePredicate = criteriaBuilder.equal(root.get("active"), active == 1);
+
+            // name LIKE %keyword% OR description LIKE %keyword% AND active = active
+            return criteriaBuilder.and(nameOrDescription, activePredicate);
+        };
+
+        var categories = categoryRepository.findAll(spec, pageable);
+
+        // Convert to DTO
+        var categoryDTOs = categories.map(item -> {
+            var categoryDTO = new CategoryDTO();
+            categoryDTO.setId(item.getId());
+            categoryDTO.setName(item.getName());
+            categoryDTO.setDescription(item.getDescription());
+            return categoryDTO;
+        });
 
         // Return data
         return categoryDTOs;

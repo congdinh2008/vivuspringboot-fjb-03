@@ -9,6 +9,16 @@ public class CategoryDTO {
 
     private String description;
 
+    private boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public UUID getId() {
         return id;
     }
